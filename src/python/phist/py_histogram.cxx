@@ -206,7 +206,7 @@ namespace cgp2d {
 
     void export_histogram(){
 
-        python::def("jointColorHistogram",vigra::registerConverters(&jointColorHistogram),
+        python::def("_jointColorHistogram_",vigra::registerConverters(&jointColorHistogram),
             (
                 python::arg("img"),
                 python::arg("dmin"),

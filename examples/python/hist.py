@@ -65,49 +65,11 @@ for x in range(0,h0.shape[2]):
 
 
 
+h0 = phist.jointHistogram(image=img,bins=5,r=3,sigma=None)
+h1 = phist.jointHistogram(image=img,bins=5,r=2,sigma=[0.7,1.0])
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-imgHist = phist.jointColorHistogram(
-	img,
-	tuple([0.0  ]*3),
-	tuple([255.0]*3),
-	tuple([5]*3),
-	7
-)
-
-
-sigma = [0.2]*2 + [1.0]*3
-smmothed = scipy.ndimage.filters.gaussian_filter(imgHist,sigma=sigma,order=0,mode='constant',cval=0.0)
-
-
-
-h0 = imgHist.reshape( [imgHist.shape[0],imgHist.shape[1],-1   ])
-h1 = smmothed.reshape( [smmothed.shape[0],smmothed.shape[1],-1   ])
+h0 = h0.reshape( [h0.shape[0],h0.shape[1],-1 ])
+h1 = h1.reshape( [h1.shape[0],h1.shape[1],-1 ])
 
 
 # show the histogram
