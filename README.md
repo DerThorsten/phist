@@ -1,4 +1,4 @@
-phist
+cgp2d
 =====
 
-python histograms
+cgp2d
