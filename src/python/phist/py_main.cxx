@@ -8,7 +8,7 @@
 
 
 #include "py_histogram.hxx"
-
+#include "py_label_histogram.hxx"
 
 BOOST_PYTHON_MODULE_INIT(_phist) {
     //using namespace boost::python;
@@ -23,7 +23,7 @@ BOOST_PYTHON_MODULE_INIT(_phist) {
 
 
     // image processing related functions and classes 
-    cgp2d::export_histogram();
-
+    phist::export_histogram();
+    phist::export_label_histogram();
 
 }

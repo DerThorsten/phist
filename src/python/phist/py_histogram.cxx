@@ -20,7 +20,7 @@
 
 namespace python = boost::python;
 
-namespace cgp2d {
+namespace phist {
 
 
 

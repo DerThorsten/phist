@@ -1,3 +1,3 @@
-namespace cgp2d {
+namespace phist {
 void export_histogram();
 } 

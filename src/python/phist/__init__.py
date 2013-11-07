@@ -1,7 +1,7 @@
 from _phist import *
 import numpy
 import vigra
-
+from scipy.ndimage.filters import gaussian_filter1d as GaussianFilter1d
 
 
 
@@ -100,3 +100,18 @@ def jointHistogram(image,dmin=None,dmax=None,bins=5,r=1,sigma=[1.0,1.0],out=None
         s = sigma[1]*2 + sigma[0]*3
         imgHist = GaussainFilter(imgHist,sigma=s,order=0)
     return imgHist
+
+
+
+def labelHistogram(img,nLabels,r=1,sigma=1.0,out=None):
+
+    labels = numpy.require(nLabels,dtype=numpy.uint64)
+    labelHist = _phist._label_histogram_(img=labels,nLabels=long(nLabels),r=long(r),out=out)
+
+
+    # convolce along x and y axis  ( 0 and 1 )
+    labelHistTmp  = labelHist.copy()
+    labelHistTmp  = GaussianFilter1d(labelHist,     sigma=sigma, axis=0, order=0, output=labelHistTmp, mode='reflect', cval=0.0)
+    labelHist     = GaussianFilter1d(labelHistTmp,  sigma=sigma, axis=1  , order=0, output=labelHist, mode='reflect', cval=0.0)
+
+    return labelHist

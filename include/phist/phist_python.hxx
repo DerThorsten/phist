@@ -15,7 +15,7 @@
 
 
 
-namespace cgp2d{
+namespace phist{
 
 	typedef vigra::UInt64 LabelType;
 	typedef vigra::UInt32 CoordinateType;
