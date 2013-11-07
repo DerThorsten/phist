@@ -1,4 +1,4 @@
-cgp2d
+phist
 =====
 
-cgp2d
+phist  - python histograms form image processing
