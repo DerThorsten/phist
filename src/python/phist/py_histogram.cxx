@@ -163,7 +163,7 @@ namespace phist {
                 // iterate over all channels
                 for(histCoord[2]=0;histCoord[2]<nChannels;++histCoord[2] ){
 
-                    const float value = img(histCoord[0],histCoord[1],histCoord[2]);
+                    const float value = img(c[0],c[1],histCoord[2]);
 
                    
 

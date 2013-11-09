@@ -5,8 +5,6 @@ from scipy.ndimage.filters import gaussian_filter1d as GaussianFilter1d
 
 
 
-
-
 """
 def gaussianSmoothing1d(histograms,sigma):
   nHist = histograms.shape[0]
@@ -72,7 +70,23 @@ def histogram(image,dmin=None,dmax=None,bins=32,r=3,sigma=[2.0,1.0],out=None):
                 rawHist[:,:,c,:] = smoothedHistograms[:,:,:]
             return rawHist
 
-    print rawHist.shape
+
+
+def batchJointHistogram(img,r=1,bins=5,sigma=[1.0,1.0]):
+    nCp      = img.shape[2]/3
+    outShape = [img.shape[0],img.shape[1],nCp,bins,bins,bins]
+
+    out      = numpy.zeros(outShape,dtype=numpy.float32)
+
+
+    for cp in range(nCp): 
+        inputImg = img[:,:,cp*3:(cp+1)*3]
+        cOut = out[:,:,cp,:,:,:]
+        cOut = jointHistogram(image=inputImg,bins=bins,r=r,sigma=sigma,out=cOut)
+
+
+    return out
+
 
 
 
@@ -90,8 +104,8 @@ def jointHistogram(image,dmin=None,dmax=None,bins=5,r=1,sigma=[1.0,1.0],out=None
         dmax = [float(dmax[x]) for x in range(3)]
     b = (bins,bins,bins)
 
-    print dmin
-    print dmax
+    #print dmin
+    #print dmax
 
     imgHist = _phist._jointColorHistogram_(img=img,dmin=dmin,dmax=dmax,bins=b,r=r,out=out)
 
@@ -103,15 +117,37 @@ def jointHistogram(image,dmin=None,dmax=None,bins=5,r=1,sigma=[1.0,1.0],out=None
 
 
 
-def labelHistogram(img,nLabels,r=1,sigma=1.0,out=None):
+def labelHistogram(img,nLabels,r=1,sigma=1.0,out=None,visu=False):
 
-    labels = numpy.require(nLabels,dtype=numpy.uint64)
+
+    nInputLabelings = img.shape[2]
+    labels = numpy.require(img,dtype=numpy.uint64)
+
+
     labelHist = _phist._label_histogram_(img=labels,nLabels=long(nLabels),r=long(r),out=out)
 
 
+
+
+
+    
     # convolce along x and y axis  ( 0 and 1 )
     labelHistTmp  = labelHist.copy()
-    labelHistTmp  = GaussianFilter1d(labelHist,     sigma=sigma, axis=0, order=0, output=labelHistTmp, mode='reflect', cval=0.0)
-    labelHist     = GaussianFilter1d(labelHistTmp,  sigma=sigma, axis=1  , order=0, output=labelHist, mode='reflect', cval=0.0)
+    labelHistTmp = GaussianFilter1d(labelHist,     sigma=sigma, axis=0, order=0, output=None, mode='reflect', cval=0.0)
+    labelHist = GaussianFilter1d(labelHistTmp,  sigma=sigma, axis=1  , order=0, output=None, mode='reflect', cval=0.0)
+
+
+    #print "difference",numpy.sum(numpy.abs(labelHistTmp-labelHist))
+    
+    if visu :
+        import pylab
+        import matplotlib
+        cmap = matplotlib.colors.ListedColormap ( numpy.random.rand ( 256,3))
+        for i in range(nInputLabelings):
+            for l in range(nLabels):
+
+                limg = labelHist[:,:,i,l]
+                pylab.imshow ( numpy.swapaxes(limg,0,1), cmap = "jet")
+                pylab.show()
 
     return labelHist
