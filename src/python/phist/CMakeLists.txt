@@ -7,6 +7,7 @@ include_directories(
 add_library(_phist SHARED
     py_histogram.cxx
     py_label_histogram.cxx
+    py_histogram_gradient.cxx
     py_main.cxx
 )
 target_link_libraries(_phist

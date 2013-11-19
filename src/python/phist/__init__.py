@@ -90,10 +90,14 @@ def batchJointHistogram(img,r=1,bins=5,sigma=[1.0,1.0]):
 
 
 
-def jointHistogram(image,dmin=None,dmax=None,bins=5,r=1,sigma=[1.0,1.0],out=None):
-    img       = numpy.require(image,dtype=numpy.float32)
+def jointHistogram(image,dmin=None,dmax=None,bins=5.0,r=1,sigma=[1.0,1.0],out=None):
+    #img       = numpy.require(image,dtype=numpy.float32)
+    img = image
     nChannels = img.shape[2]
     flat      = img.reshape([-1,nChannels])
+
+    print "flatshape",flat.shape
+
     assert nChannels == 3
 
     if dmin is None :
@@ -118,7 +122,6 @@ def jointHistogram(image,dmin=None,dmax=None,bins=5,r=1,sigma=[1.0,1.0],out=None
 
 
 def labelHistogram(img,nLabels,r=1,sigma=1.0,out=None,visu=False):
-
 
     nInputLabelings = img.shape[2]
     labels = numpy.require(img,dtype=numpy.uint64)
@@ -151,3 +154,33 @@ def labelHistogram(img,nLabels,r=1,sigma=1.0,out=None,visu=False):
                 pylab.show()
 
     return labelHist
+
+
+
+
+def labelHistogramNew(img,nLabels,labelSim,r=1,sigma=1.0,out=None,visu=False):
+
+    dx,dy = img.shape[0:2]
+
+    ndim = img.dim 
+
+    # a single labeling
+    if ndim == 3 :
+        assert labelSim.dim==2
+        assert labelSim.shape[0]==nLabels
+        assert labelSim.shape[1]==nLabels
+        img  = img.reshape([dx,dy,1,nLabels])
+        labelSim=labelSim.reshape([1,nLabels,nLabels])
+    # multiple labelings
+    elif ndim == 4:
+        assert labelSim.dim==3
+        assert labelSim.shape[0]==img.shape[2]
+        assert labelSim.shape[1]==nLabels
+        assert labelSim.shape[2]==nLabels
+    else :
+        raise RuntimeError("""img.dim must be either 3 (a single labeling) or 4 (multiple labelings).
+            the axis ordering must be (x,y,bins) or (x,y,labeling,bins)
+            """); 
+
+
+    #for nl in range()
